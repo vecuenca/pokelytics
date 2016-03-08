@@ -17,12 +17,12 @@ class Pokemon extends Migration
             $table->string('name');
             $table->string('type_1');
             $table->string('type_2')->nullable();
-            $table->double('hp', 15, 8);
-            $table->double('attack', 15, 8);
-            $table->double('defense', 15, 8);
-            $table->double('special_attack', 15, 8);
-            $table->double('special_defense', 15, 8);
-            $table->double('catch_rate', 15, 8);
+            $table->double('hp', 4, 1);
+            $table->double('attack', 4, 1);
+            $table->double('defense', 4, 1);
+            $table->double('special', 4, 1);
+            $table->double('speed', 4, 1);
+            $table->double('catch_rate', 4, 1);
         });
     }
     /**
