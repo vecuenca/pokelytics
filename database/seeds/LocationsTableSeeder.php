@@ -11,7 +11,7 @@ class LocationsTableSeeder extends Seeder
 	*/
 	public function run()
 	{
-	DB::insert('insert into locations (id, name, region, music_played) values (?, ?, ?, ?)', 
+	DB::insert('insert into locations (id, name, region, music_played) values (?, ?, ?, ?)',
 		[null, "Ceurlian City", "Kanto", "Fart2"]);
 	}
 }

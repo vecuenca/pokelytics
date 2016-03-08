@@ -169,10 +169,10 @@ class PokemonsTableSeeder extends Seeder
         foreach ($poke_array as list($a,$b,$c,$d,$e,$f,$g,$h,$i,$j))
         {
             DB::insert(
-            'insert into pokemons 
-            (id, name, type_1, type_2, hp, attack, defense, special, speed, catch_rate) 
-            values 
-            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ', 
+            'insert into pokemons
+            (id, name, type_1, type_2, hp, attack, defense, special, speed, catch_rate)
+            values
+            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ',
              [$a,$b,$c,$d,$e,$f,$g,$h,$i,$j]);
         }
     }
