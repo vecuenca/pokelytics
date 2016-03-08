@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class PokemonMovesTableSeeder extends Seeder
+class PokemonLocationsTableSeeder extends Seeder
 {
 	/**
 	* Run the database seeds.
@@ -11,8 +11,8 @@ class PokemonMovesTableSeeder extends Seeder
 	*/
 	public function run()
 	{
-	$plocs_array = [
-		[43, 71, 1]
+/*	$plocs_array = [
+		[43, 71]
 	];
 
 	foreach ($pmoves_array as list($a, $b))
@@ -22,6 +22,5 @@ class PokemonMovesTableSeeder extends Seeder
 			values
 			(?, ?)',
 			[$a, $b]);
-		}
+*/		}
 	}
-}
