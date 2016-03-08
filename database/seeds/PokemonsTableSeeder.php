@@ -21,7 +21,12 @@ class PokemonsTableSeeder extends Seeder
             [7,"Squirtle","Water",null,44,48,65,50,43,45],
             [8,"Wartortle","Water",null,59,63,80,65,58,45],
             [9,"Blastoise","Water",null,79,83,100,85,78,45],
-            [10,"Caterpie","Bug",null,45,30,35,20,45,255]
+            [10,"Caterpie","Bug",null,45,30,35,20,45,255],
+            [11,"Metapod","Bug",null,50,20,55,25,30,120],
+            [12,"Butterfree","Bug","Flying",60,45,50,80,70,45]
+            
+
+
             ];
 
 
