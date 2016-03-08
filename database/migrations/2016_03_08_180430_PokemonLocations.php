@@ -12,12 +12,12 @@ class PokemonLocations extends Migration
      */
     public function up()
     {
-        Schema::create('pokemon_moves', function (Blueprint $table) {
+        Schema::create('pokemon_locations', function (Blueprint $table) {
             $table->integer('pokemon')->unsigned();
             $table->foreign('pokemon')->references('id')->on('pokemons');
             $table->integer('location')->unsigned();
             $table->foreign('location')->references('id')->on('locations');
-locations});
+        });
     }
 
     /**
