@@ -32,6 +32,6 @@ class Pokemon extends Migration
      */
     public function down()
     {
-        Schema::drop('pokemons');
+        Schema::drop('trainers');
     }
 }
