@@ -17,8 +17,8 @@ class Move extends Migration
             $table->string('name');
             $table->string('type');
             $table->string('category');
-            $table->double('power', 4, 1);
-            $table->double('accuracy', 4, 1);
+            $table->double('power', 4, 1)->nullable();
+            $table->double('accuracy', 4, 1)->nullable();
             $table->double('pp', 4, 1);
             $table->string('effect');
         });
