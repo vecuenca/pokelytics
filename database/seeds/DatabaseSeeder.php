@@ -19,5 +19,6 @@ class DatabaseSeeder extends Seeder
         $this->call(MovesTableSeeder::class);
         $this->call(PokemonMovesTableSeeder::class);
         $this->call(PokemonLocationsTableSeeder::class);
+        $this->call(PokemonTrainersTableSeeder::class);
     }
 }
