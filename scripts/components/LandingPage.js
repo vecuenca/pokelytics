@@ -1,18 +1,25 @@
 import React from 'react';
 import RaisedButton from 'material-ui/lib/raised-button';
 
-class Home extends React.Component {
+import { connect } from 'react-redux'
+import { pushPath } from 'redux-simple-router'
+
+class LandingPage extends React.Component {
 	constructor(props) {
 		super(props);
-		this.displayName = 'Home';
+		this.displayName = 'LandingPage';
+	}
+
+	onGetStartedClick() {
+		this.props.dispatch(pushPath('/'))
 	}
 
 	render() {
 		return (
-			<div className="HomePage">
+			<div className="LandingPage">
 				<h2 style={style.title}>Pokélytics</h2>
 				<h5 style={style.tagLine} className="muted">Gotta analyze them all</h5>
-				<RaisedButton label="Get Started" onClick={console.log("clicked")}></RaisedButton>
+				<RaisedButton label="Get Started" onClick={this.onGetStartedClick.bind(this)}></RaisedButton>
 			</div>);
 	}
 }
@@ -30,4 +37,4 @@ const style = {
 	}
 }
 
-export default Home;
+export default connect()(LandingPage);

@@ -7,7 +7,9 @@ import { syncReduxAndRouter } from 'redux-simple-router'
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
 // Components
-import Home from './components/Home'
+import LandingPage from './components/LandingPage'
+import AppPage from './components/AppPage'
+import Pokemons from './components/Pokemons'
 
 import configureStore from './store/configureStore'
 
@@ -27,7 +29,10 @@ injectTapEventPlugin();
 var routes = (
 	<Provider store={store}>
 		<Router history={history}>
-			<Route path="/" component={Home}></Route>
+			<Route path="/welcome" component={LandingPage}></Route>
+			<Route path="/" component={AppPage}>
+				<Route path="pokemons" component={Pokemons}></Route>
+			</Route>
 		</Router>
   	</Provider>
 )
