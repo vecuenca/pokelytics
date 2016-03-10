@@ -15,14 +15,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('pokemon',
+Route::resource('api/pokemon',
 	'PokemonController', ['only' => ['index', 'show']]);
 
-Route::get('pokemon', 'PokemonController@index');
-Route::get('pokemon/id/{id}', 'PokemonController@show');
-Route::get('pokemon/{type_1?}/{type_2?}','PokemonController@show');
+Route::get('api/pokemon/all', 'PokemonController@index');
+Route::get('api/pokemon', 'PokemonController@show');
 
-Route::get('trainer/{id}', 'TrainerController@show');
+// Route::get('test','PokemonController@test');
+Route::get('api/trainer/{id}', 'TrainerController@show');
 
 
 /*
