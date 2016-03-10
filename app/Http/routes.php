@@ -24,6 +24,7 @@ Route::get('pokemon/{type_1?}/{type_2?}','PokemonController@show'));
 
 Route::get('trainer/{id}', 'TrainerController@show');
 
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
