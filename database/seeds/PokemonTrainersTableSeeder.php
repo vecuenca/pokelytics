@@ -12,17 +12,17 @@ class PokemonTrainersTableSeeder extends Seeder
     public function run()
     {
         $ptrainer_array = [
-            [1, 1, "Vassos"]
+            [1, 1, "Vassos", 1, 2, 3, 4]
             ];
 
-        foreach ($ptrainer_array as list($a,$b,$c))
+        foreach ($ptrainer_array as list($a,$b,$c,$d,$e,$f,$g))
         {
             DB::insert(
             'insert into pokemon_trainers
-            (pokemon, trainer, name)
+            (pokemon, trainer, name, move1, move2, move3, move4)
             values
-            (?, ?, ?) ',
-            [$a,$b,$c]);
+            (?, ?, ?, ?, ?, ?, ?) ',
+            [$a,$b,$c,$d,$e,$f,$g]);
         }
     }
 }
