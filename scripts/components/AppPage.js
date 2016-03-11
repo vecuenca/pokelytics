@@ -19,7 +19,9 @@ class AppPage extends React.Component {
 		super(props);
 		this.displayName = 'AppPage';
 		this.state = {
-			query: ''
+			query: '',
+			res: [],
+			err: ""
 		}
 	}
 
@@ -33,9 +35,15 @@ class AppPage extends React.Component {
 			.send({ query: val })
 			.end((err, res) => {
 				if (err || !res.ok) {
-					console.log(err.response.text)
+					this.setState(Object.assign({}, this.state, {
+						err: err.response.text,
+						res: []
+					}))
 				} else {
-					console.log(res.text)
+					this.setState(Object.assign({}, this.state, {
+						err: "",
+						res: res.text
+					}))
 				}
 			})
 	}
@@ -63,6 +71,9 @@ class AppPage extends React.Component {
 						onSubmit={this.onSubmit.bind(this)}
 						onChange={this.onChange.bind(this)}></QueryBox>
 				</div>
+				<div style={style.results}>
+					{this.state.err ? this.state.err : this.state.res }
+				</div>
 			</div>
 			);
 	}
@@ -86,6 +97,11 @@ const style = {
 	},
 	query: {
 		display: 'block',
+		width: '500px'
+	},
+	results: {
+		display: 'block',
+		marginTop: '25px',
 		width: '500px'
 	}
 }
