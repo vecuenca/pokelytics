@@ -32,8 +32,7 @@ const style = {
 	tagLine: {
 		fontSize: '25px',
 		marginTop: '0',
-		marginBottom: '30px',
-
+		marginBottom: '20px',
 	}
 }
 

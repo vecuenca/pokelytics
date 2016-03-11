@@ -11,40 +11,57 @@ import EditorFormatListNumbered from 'material-ui/lib/svg-icons/editor/format-li
 import SocialGroup from 'material-ui/lib/svg-icons/social/group'
 import MapsPlace from 'material-ui/lib/svg-icons/maps/place'
 
+import QueryBox from './QueryBox'
+import request from 'superagent';
+
 class AppPage extends React.Component {
 	constructor(props) {
 		super(props);
 		this.displayName = 'AppPage';
+		this.state = {
+			query: ''
+		}
 	}
 
 	allPokemonClick() {
 		this.props.dispatch(pushPath('/pokemons'))
 	}
 
+	callApi(val) {
+		request
+			.post('/api/pokemon')
+			.send({ query: val })
+			.end((err, res) => {
+				if (err || !res.ok) {
+					console.log(err.response.text)
+				} else {
+					console.log(res.text)
+				}
+			})
+	}
+
+	onSubmit(val) {
+		this.setState(Object.assign({}, this.state, {
+			query: val
+		}))
+		this.callApi(val)
+	}
+
+	onChange(val) {
+		this.setState(Object.assign({}, this.state, {
+			query: val
+		}))
+	}
+
 	render() {
 		return (
-			<div>
-				<LeftNav>
-					<List subheader="Pokemon Team Management">
-						<ListItem
-							primaryText="Your Pokemon" 
-							leftIcon={<AvPlaylistAdd></AvPlaylistAdd>}/>
-					</List>
-					<List subheader="Pokemon Information">
-						<ListItem
-							onClick={this.allPokemonClick.bind(this)}
-							primaryText="All Pokemon" 
-							leftIcon={<EditorFormatListNumbered></EditorFormatListNumbered>}/>
-						<ListItem
-							primaryText="Trainers" 
-							leftIcon={<SocialGroup></SocialGroup>}/>
-						<ListItem
-							primaryText="Pokemon Locations" 
-							leftIcon={<MapsPlace></MapsPlace>}/>
-					</List>
-				</LeftNav>
-				<div style={style.AppArea}>
-					{this.props.children}
+			<div className="LandingPage">
+				<h2 style={style.title}>Pokélytics</h2>
+				<h5 style={style.tagLine} className="muted">Gotta analyze them all</h5>
+				<div style={style.query}>
+					<QueryBox
+						onSubmit={this.onSubmit.bind(this)}
+						onChange={this.onChange.bind(this)}></QueryBox>
 				</div>
 			</div>
 			);
@@ -52,10 +69,24 @@ class AppPage extends React.Component {
 }
 
 const style = {
+	title: {
+		fontSize: '56px',
+		marginBottom: '0'
+	},
+	tagLine: {
+		fontSize: '25px',
+		marginTop: '0',
+		marginBottom: '20px',
+	},
 	AppArea: {
 		display: 'block',
 		marginLeft: '256px',
-		padding: '15px 15px 15px 15px'
+		padding: '15px 15px 15px 15px',
+		height: '100%'
+	},
+	query: {
+		display: 'block',
+		width: '500px'
 	}
 }
 

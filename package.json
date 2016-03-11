@@ -69,6 +69,7 @@
     "react-dom": "^0.14.0",
     "react-mixin": "^3.0.0",
     "react-router": "^1.0.0-rc3",
+    "superagent": "^1.8.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.4.0"
