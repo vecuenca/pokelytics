@@ -20,26 +20,14 @@ class PokemonController extends Controller
         return json_encode($pokemon);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $pokemon = DB::select('select * from pokemons where id = :id', ['id'=>$id]);
-        return json_encode($pokemon);
-    }
-
-    public function showByType($type_1, $type_2 = null)
-    {
-        $where = "select * from pokemons where";
-
-        $where . "type_1 = " . $type_1;
-        if ($type_2)
-            $where . "and type_2 = " . $type_2;
-
-        return json_encode($pokemon);
+    public function put(Request $r) {
+        if ($r->has('query')) {
+            try {
+                $result = DB::select($r->get('query'));
+            } catch (\PDOException $e) {
+                return $e->getMessage();
+            }
+            return json_encode($result);
+        }
     }
 }

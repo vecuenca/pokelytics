@@ -16,12 +16,11 @@ Route::get('/', function () {
 });
 
 Route::resource('api/pokemon',
-	'PokemonController', ['only' => ['index', 'show']]);
+	'PokemonController', ['only' => ['index', 'show', 'put']]);
 
 Route::get('api/pokemon/all', 'PokemonController@index');
-Route::get('api/pokemon', 'PokemonController@show');
+Route::post('api/pokemon', 'PokemonController@put');
 
-// Route::get('test','PokemonController@test');
 Route::get('api/trainer/{id}', 'TrainerController@show');
 
 
