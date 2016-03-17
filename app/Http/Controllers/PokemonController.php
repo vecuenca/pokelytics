@@ -27,7 +27,8 @@ class PokemonController extends Controller
             } catch (\PDOException $e) {
                 return $e->getMessage();
             }
-            return json_encode($result);
+            $keys = array_keys((array) $result[0]);
+            return json_encode(array_merge(array($keys), $result));
         }
     }
 }
