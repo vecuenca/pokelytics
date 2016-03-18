@@ -16,7 +16,6 @@ class Location extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('region');
-            $table->string('music_played');
         });
     }
 
