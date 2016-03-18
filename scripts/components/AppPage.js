@@ -102,6 +102,30 @@ class AppPage extends React.Component {
 		})
 	}
 
+	getTitleStyle(defaultStyle, query) {
+		if (query !== "") {
+			return Object.assign({}, defaultStyle, {
+				display: 'none'
+			})
+		} else {
+			return Object.assign({}, defaultStyle, {
+				display: 'block'
+			})
+		}
+	}
+
+	getQueryBoxStyle(defaultStyle, query) {
+		if (query !== "") {
+			return Object.assign({}, defaultStyle, {
+				marginTop: '20px'
+			})
+		} else {
+			return Object.assign({}, defaultStyle, {
+				marginTop: '0'
+			})
+		}
+	}
+
 	renderResultsTable(dataSetString) {
 		try {
 			let dataSet = JSON.parse(dataSetString)
@@ -235,11 +259,11 @@ class AppPage extends React.Component {
 				</LeftNav>
 				<div style={this.getStyle(this.state.leftNavOpen)}>
 					{this.state.leftNavOpen ? 
-						<IconButton onClick={this.closeLeftNav.bind(this)}><NavigationChevronLeft></NavigationChevronLeft></IconButton> : 
-						<IconButton onClick={this.openLeftNav.bind(this)}><NavigationChevronRight></NavigationChevronRight></IconButton>}
-					<h2 style={style.title}>Pokélytics</h2>
-					<h5 style={style.tagLine} className="muted">Gotta analyze them all</h5>
-					<div style={style.query}>
+						<IconButton style={style.iconButton} onClick={this.closeLeftNav.bind(this)}><NavigationChevronLeft></NavigationChevronLeft></IconButton> : 
+						<IconButton style={style.iconButton} onClick={this.openLeftNav.bind(this)}><NavigationChevronRight></NavigationChevronRight></IconButton>}
+					<h2 style={this.getTitleStyle(style.title, this.state.query)}>Pokélytics</h2>
+					<h5 style={this.getTitleStyle(style.tagLine, this.state.query)} className="muted">Gotta analyze them all</h5>
+					<div style={this.getQueryBoxStyle(style.query, this.state.query)}>
 						<QueryBox
 							onSubmit={this.onSubmit.bind(this)}
 							query={this.state.query}
@@ -278,6 +302,10 @@ const style = {
 		width: '100%',
 		margin: '0 auto',
 		marginBottom: '30px'
+	},
+	iconButton: {
+		position: 'absolute',
+		top: '0'
 	},
 	results: {
 		display: 'block',
