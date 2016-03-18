@@ -14,6 +14,7 @@ import ActionInfo from 'material-ui/lib/svg-icons/action/info';
 import Dialog from 'material-ui/lib/dialog';
 
 import QueryBox from './QueryBox'
+import ResultsTable from './ResultsTable'
 import request from 'superagent';
 
 class AppPage extends React.Component {
@@ -67,12 +68,24 @@ class AppPage extends React.Component {
 	}
 
 	handleOpen = (dialog, dialogTitle) => {
-    this.setState({open: true, dialog: dialog, dialogTitle: dialogTitle});
-  };
+		this.setState({open: true, dialog: dialog, dialogTitle: dialogTitle});
+	};
 
-  handleClose = () => {
-    this.setState({open: false});
-  };
+	handleClose = () => {
+		this.setState({open: false});
+	};
+
+	onClickPredefinedQuery(query) {
+		this.onChange(query)
+		this.onSubmit(query)
+	}
+
+	renderResultsTable(dataSetString) {
+		let dataSet = JSON.parse(dataSetString)
+		// Always gauranteed first row is header.
+		let headers = dataSet[0];
+		return <ResultsTable headers={headers} dataset={_.rest(dataSet)} />
+	}
 
 	render() {
 		const dialogData = [
@@ -137,15 +150,14 @@ class AppPage extends React.Component {
 				<LeftNav>
 					<List subheader="Table Schemas">
 						<Dialog
-		          title={this.state.dialogTitle}
-		          modal={false}
-		          open={this.state.open}
-		          onRequestClose={this.handleClose}
-		          style={dialogStyle}
-		        >
-		        {this.state.dialog}
-        		</Dialog>
-
+							title={this.state.dialogTitle}
+							modal={false}
+							open={this.state.open}
+							onRequestClose={this.handleClose}
+							style={dialogStyle}
+							>
+							{this.state.dialog}
+						</Dialog>
 						<ListItem
 							primaryText="Pokemons"
 							onTouchTap={this.handleOpen.bind(this, dialogData[0][1], dialogData[0][0])}
@@ -184,14 +196,16 @@ class AppPage extends React.Component {
 					</List>
 					<List subheader="Predefined SQL Queries">
 						<ListItem
-							onClick={this.onSubmit.bind('SELECT * from Pokemons')}
+							onClick={this.onClickPredefinedQuery.bind(this, 'SELECT * from pokemons')}
 							primaryText="All Pokemon"
 							leftIcon={<EditorFormatListNumbered></EditorFormatListNumbered>}/>
 						<ListItem
 							primaryText="Trainers"
+							onClick={this.onClickPredefinedQuery.bind(this, 'SELECT * from trainers')}
 							leftIcon={<SocialGroup></SocialGroup>}/>
 						<ListItem
 							primaryText="Pokemon Locations"
+							onClick={this.onClickPredefinedQuery.bind(this, 'SELECT * from locations')}
 							leftIcon={<MapsPlace></MapsPlace>}/>
 					</List>
 				</LeftNav>
@@ -201,10 +215,12 @@ class AppPage extends React.Component {
 					<div style={style.query}>
 						<QueryBox
 							onSubmit={this.onSubmit.bind(this)}
+							query={this.state.query}
 							onChange={this.onChange.bind(this)}></QueryBox>
 					</div>
 					<div style={style.results}>
-						{this.state.err ? this.state.err : this.state.res }
+						{this.state.err ? this.state.err : undefined }
+						{!this.state.err && this.state.res.length > 0 ? this.renderResultsTable(this.state.res) : undefined}
 					</div>
 				</div>
 			</div>
@@ -239,7 +255,8 @@ const style = {
 	results: {
 		display: 'block',
 		marginTop: '25px',
-		maxWidth: '800px',
+		marginLeft: '20px',
+		marginRight: '20px',
 		width: '100%',
 		overflow: 'scroll',
 		margin: '0 auto'
