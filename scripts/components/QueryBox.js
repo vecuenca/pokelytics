@@ -19,8 +19,11 @@ class QueryBox extends React.Component {
 						style={style.textField}
 						inputStyle={style.inputStyle}
 						hintStyle={style.inputStyle}
+						defaultValue={this.props.query}
 						value={this.props.query}
-						onChange={this.props.onChange.bind(this)}
+						onChange={(el, val) => {
+							this.props.onChange(el.currentTarget.value)
+						}.bind(this)}
 						multiLine={true}
 						rows={1}
 						rowsMax={6}

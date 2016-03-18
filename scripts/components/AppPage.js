@@ -103,10 +103,14 @@ class AppPage extends React.Component {
 	}
 
 	renderResultsTable(dataSetString) {
-		let dataSet = JSON.parse(dataSetString)
-		// Always gauranteed first row is header.
-		let headers = dataSet[0];
-		return <ResultsTable headers={headers} dataset={_.rest(dataSet)} />
+		try {
+			let dataSet = JSON.parse(dataSetString)
+			// Always gauranteed first row is header.
+			let headers = dataSet[0];
+			return <ResultsTable headers={headers} dataset={_.rest(dataSet)} />
+		} catch (err) { // if error it must be from json.parse
+			return <div style={{marginLeft: '20px', marginRight: '20px'}}>{dataSetString}</div>
+		}
 	}
 
 	render() {
