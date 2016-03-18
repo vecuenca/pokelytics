@@ -26,7 +26,7 @@ class AppPage extends React.Component {
 		this.displayName = 'AppPage';
 		this.state = {
 			query: '',
-			res: [],
+			res: "",
 			err: "",
 			open: false,
 			dialog: "",
@@ -45,42 +45,42 @@ class AppPage extends React.Component {
 			.send({ query: val })
 			.end((err, res) => {
 				if (err || !res.ok) {
-					this.setState(Object.assign({}, this.state, {
+					this.setState({
 						err: err.response.text,
 						res: []
-					}))
+					})
 				} else {
-					this.setState(Object.assign({}, this.state, {
+					this.setState({
 						err: "",
 						res: res.text
-					}))
+					})
 				}
 			})
 	}
 
 	openLeftNav() {
-		this.setState(Object.assign({}, this.state, {
+		this.setState({
 			leftNavOpen: true
-		}))
+		})
 	}
 
 	closeLeftNav() {
-		this.setState(Object.assign({}, this.state, {
+		this.setState({
 			leftNavOpen: false
-		}))
+		})
 	}
 
 	onSubmit(val) {
-		this.setState(Object.assign({}, this.state, {
+		this.setState({
 			query: val
-		}))
+		})
 		this.callApi(val)
 	}
 
 	onChange(val) {
-		this.setState(Object.assign({}, this.state, {
+		this.setState({
 			query: val
-		}))
+		})
 	}
 
 	handleOpen = (dialog, dialogTitle) => {
@@ -105,9 +105,7 @@ class AppPage extends React.Component {
 	renderResultsTable(dataSetString) {
 		try {
 			let dataSet = JSON.parse(dataSetString)
-			// Always gauranteed first row is header.
-			let headers = dataSet[0];
-			return <ResultsTable headers={headers} dataset={_.rest(dataSet)} />
+			return <ResultsTable dataset={dataSetString} />
 		} catch (err) { // if error it must be from json.parse
 			return <div style={{marginLeft: '20px', marginRight: '20px'}}>{dataSetString}</div>
 		}
@@ -249,7 +247,7 @@ class AppPage extends React.Component {
 					</div>
 					<div style={style.results}>
 						{this.state.err ? this.state.err : undefined }
-						{!this.state.err && this.state.res.length > 0 ? this.renderResultsTable(this.state.res) : undefined}
+						{!this.state.err && this.state.res != "" ? this.renderResultsTable(this.state.res) : undefined}
 					</div>
 				</div>
 			</div>
@@ -287,8 +285,8 @@ const style = {
 		marginLeft: '20px',
 		marginRight: '20px',
 		width: '100%',
-		overflow: 'scroll',
-		margin: '0 auto'
+		margin: '0 auto',
+		marginBottom: '20px'
 	}
 }
 

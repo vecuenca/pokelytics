@@ -13,19 +13,27 @@ class ResultsTable extends React.Component {
 		this.displayName = 'ResultsTable';
 	}
 
+	shouldComponentUpdate(nextProps, nextState) {
+		return !(nextProps.dataset === this.props.dataset)
+	}
+
 	render() {
+		let dataSet = JSON.parse(this.props.dataset)
+		let dataset = _.rest(dataSet)
+		// Always gauranteed first row is header.
+		let headers = dataSet[0];
 		return (
 			<div style={{marginLeft: '20px', marginRight: '20px'}}>
 				<Table>
 					<TableHeader displaySelectAll={false} adjustForCheckbox={false}>
 						<TableRow>
-							{this.props.headers.map(el => {
+							{headers.map(el => {
 								return <TableHeaderColumn key={el}>{el}</TableHeaderColumn>
 							})}
 						</TableRow>
 					</TableHeader>
 					<TableBody displayRowCheckbox={false}>
-						{this.props.dataset.map((el, i) => {
+						{dataset.map((el, i) => {
 							let values = _.values(el)
 							return (
 								<TableRow key={i}>
