@@ -15,7 +15,7 @@ class ResultsTable extends React.Component {
 
 	render() {
 		return (
-			<div>
+			<div style={{marginLeft: '20px', marginRight: '20px'}}>
 				<Table>
 					<TableHeader displaySelectAll={false} adjustForCheckbox={false}>
 						<TableRow>

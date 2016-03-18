@@ -11,7 +11,10 @@ import EditorFormatListNumbered from 'material-ui/lib/svg-icons/editor/format-li
 import SocialGroup from 'material-ui/lib/svg-icons/social/group'
 import MapsPlace from 'material-ui/lib/svg-icons/maps/place'
 import ActionInfo from 'material-ui/lib/svg-icons/action/info';
+import NavigationChevronLeft from 'material-ui/lib/svg-icons/navigation/chevron-left';
+import NavigationChevronRight from 'material-ui/lib/svg-icons/navigation/chevron-right';
 import Dialog from 'material-ui/lib/dialog';
+import IconButton from 'material-ui/lib/icon-button';
 
 import QueryBox from './QueryBox'
 import ResultsTable from './ResultsTable'
@@ -27,7 +30,8 @@ class AppPage extends React.Component {
 			err: "",
 			open: false,
 			dialog: "",
-			dialogTitle: ""
+			dialogTitle: "",
+			leftNavOpen: true
 		}
 	}
 
@@ -54,6 +58,18 @@ class AppPage extends React.Component {
 			})
 	}
 
+	openLeftNav() {
+		this.setState(Object.assign({}, this.state, {
+			leftNavOpen: true
+		}))
+	}
+
+	closeLeftNav() {
+		this.setState(Object.assign({}, this.state, {
+			leftNavOpen: false
+		}))
+	}
+
 	onSubmit(val) {
 		this.setState(Object.assign({}, this.state, {
 			query: val
@@ -78,6 +94,12 @@ class AppPage extends React.Component {
 	onClickPredefinedQuery(query) {
 		this.onChange(query)
 		this.onSubmit(query)
+	}
+
+	getStyle(leftNavIsOpen) {
+		return Object.assign({}, style, {
+			marginLeft: leftNavIsOpen ? '256px' : '0'
+		})
 	}
 
 	renderResultsTable(dataSetString) {
@@ -147,7 +169,7 @@ class AppPage extends React.Component {
 
 		return (
 			<div>
-				<LeftNav>
+				<LeftNav open={this.state.leftNavOpen}>
 					<List subheader="Table Schemas">
 						<Dialog
 							title={this.state.dialogTitle}
@@ -209,7 +231,10 @@ class AppPage extends React.Component {
 							leftIcon={<MapsPlace></MapsPlace>}/>
 					</List>
 				</LeftNav>
-				<div style={style.AppArea}>
+				<div style={this.getStyle(this.state.leftNavOpen)}>
+					{this.state.leftNavOpen ? 
+						<IconButton onClick={this.closeLeftNav.bind(this)}><NavigationChevronLeft></NavigationChevronLeft></IconButton> : 
+						<IconButton onClick={this.openLeftNav.bind(this)}><NavigationChevronRight></NavigationChevronRight></IconButton>}
 					<h2 style={style.title}>Pokélytics</h2>
 					<h5 style={style.tagLine} className="muted">Gotta analyze them all</h5>
 					<div style={style.query}>
