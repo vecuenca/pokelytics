@@ -131,7 +131,7 @@ class AppPage extends React.Component {
 	handleMoveDiagSubmit = () => {
 		// run the query here
 		let val = this.refs['pkmnMoveDiag'].getValue();
-		var query = "SELECT * from pokemons p, pokemon_moves, moves  WHERE p.name='" + val + "'";
+		var query = "SELECT m.* from pokemons p, pokemon_moves, moves m  WHERE pokemon = p.id and move = m.id and p.name='" + val + "'";
 		this.setState({
 			query: query
 		})
@@ -335,7 +335,7 @@ class AppPage extends React.Component {
 							onClick={this.onClickPredefinedQuery.bind(this, 'SELECT * from locations')}
 							leftIcon={<MapsPlace></MapsPlace>}/>
 						<ListItem
-							primaryText="Find Pokemon's moves"
+							primaryText="Find a Pokemon's moves"
 							onClick={this.handleMoveDiagOpen}
 							leftIcon={<ImageFlashOn></ImageFlashOn>}/>
 					</List>
