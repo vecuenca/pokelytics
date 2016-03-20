@@ -6,6 +6,9 @@ import { pushPath } from 'redux-simple-router'
 import LeftNav from 'material-ui/lib/left-nav';
 import List from 'material-ui/lib/lists/list';
 import ListItem from 'material-ui/lib/lists/list-item';
+import AutoComplete from 'material-ui/lib/auto-complete';
+
+// icons
 import AvPlaylistAdd from 'material-ui/lib/svg-icons/av/playlist-add'
 import EditorFormatListNumbered from 'material-ui/lib/svg-icons/editor/format-list-numbered'
 import SocialGroup from 'material-ui/lib/svg-icons/social/group'
@@ -13,8 +16,12 @@ import MapsPlace from 'material-ui/lib/svg-icons/maps/place'
 import ActionInfo from 'material-ui/lib/svg-icons/action/info';
 import NavigationChevronLeft from 'material-ui/lib/svg-icons/navigation/chevron-left';
 import NavigationChevronRight from 'material-ui/lib/svg-icons/navigation/chevron-right';
+import ImageFlashOn from 'material-ui/lib/svg-icons/image/flash-on';
+
+
 import Dialog from 'material-ui/lib/dialog';
 import IconButton from 'material-ui/lib/icon-button';
+import FlatButton from 'material-ui/lib/flat-button';
 
 import QueryBox from './QueryBox'
 import ResultsTable from './ResultsTable'
@@ -29,12 +36,15 @@ class AppPage extends React.Component {
 			res: "",
 			err: "",
 			open: false,
+			moveDiagOpen: false,
 			dialog: "",
 			dialogTitle: "",
-			leftNavOpen: true
+			leftNavOpen: true,
+			pkmnMoveDiagRes: []
 		}
 	}
 
+	// Delete this
 	allPokemonClick() {
 		this.props.dispatch(pushPath('/pokemons'))
 	}
@@ -55,6 +65,24 @@ class AppPage extends React.Component {
 						res: res.text
 					})
 				}
+			})
+	}
+
+	getPokemonNames() {
+		request
+			request
+			.post('/api/pokemon')
+			.send({ query: "SELECT name from pokemons" })
+			.end((err, res) => {
+				var json = JSON.parse(res.text);
+				json.shift();
+				var result = [];
+
+				for (var i in json)
+					result.push(json[i].name);
+				this.setState({
+					pkmnMoveDiagRes: result
+				})
 			})
 	}
 
@@ -87,8 +115,28 @@ class AppPage extends React.Component {
 		this.setState({open: true, dialog: dialog, dialogTitle: dialogTitle});
 	};
 
+	handleMoveDiagOpen = () => {
+		this.getPokemonNames();
+		this.setState({moveDiagOpen: true});
+	};
+
 	handleClose = () => {
 		this.setState({open: false});
+	};
+
+	handleMoveDiagClose = () => {
+		this.setState({moveDiagOpen: false});
+	};
+
+	handleMoveDiagSubmit = () => {
+		// run the query here
+		let val = this.refs['pkmnMoveDiag'].getValue();
+		var query = "SELECT * from pokemons p, pokemon_moves, moves  WHERE p.name='" + val + "'";
+		this.setState({
+			query: query
+		})
+		this.setState({moveDiagOpen: false});
+		this.callApi(query);
 	};
 
 	onClickPredefinedQuery(query) {
@@ -136,6 +184,21 @@ class AppPage extends React.Component {
 	}
 
 	render() {
+
+		// Move this and related dialog to own component?
+		const pkmnMoveDiagActions = [
+			<FlatButton
+        label="Cancel"
+        secondary={true}
+        onTouchTap={this.handleMoveDiagClose}
+      />,
+      <FlatButton
+        label="Submit"
+        primary={true}
+        keyboardFocused={true}
+        onTouchTap={this.handleMoveDiagSubmit}
+      />,
+		];
 		const dialogData = [
 		["Pokemon Schema",
 		"Columns:id	int(10) UN AI PK \r\n \
@@ -202,12 +265,28 @@ class AppPage extends React.Component {
 							modal={false}
 							open={this.state.open}
 							onRequestClose={this.handleClose}
-							style={dialogStyle}
-							>
+							style={dialogStyle}>
 							{this.state.dialog}
 						</Dialog>
+						<Dialog
+							title='Choose a Pokemon to view their moves'
+							modal={false}
+							actions={pkmnMoveDiagActions}
+							open={this.state.moveDiagOpen}
+							onRequestClose={this.handleMoveDiagClose}
+							style={dialogStyle}>
+							<div>
+								<AutoComplete
+									ref='pkmnMoveDiag'
+									hintText="Enter Pokemon name"
+									filter={AutoComplete.fuzzyFilter}
+									dataSource={this.state.pkmnMoveDiagRes}
+									triggerUpdateOnFocus={true}/>
+							</div>
+						</Dialog>
+
 						<ListItem
-							primaryText="Pokemons"
+							primaryText="Pokemon"
 							onTouchTap={this.handleOpen.bind(this, dialogData[0][1], dialogData[0][0])}
 							//secondaryText="Pokemon name, stats"
 							rightIcon={<ActionInfo />}/>
@@ -255,10 +334,14 @@ class AppPage extends React.Component {
 							primaryText="Pokemon Locations"
 							onClick={this.onClickPredefinedQuery.bind(this, 'SELECT * from locations')}
 							leftIcon={<MapsPlace></MapsPlace>}/>
+						<ListItem
+							primaryText="Find Pokemon's moves"
+							onClick={this.handleMoveDiagOpen}
+							leftIcon={<ImageFlashOn></ImageFlashOn>}/>
 					</List>
 				</LeftNav>
 				<div style={this.getStyle(this.state.leftNavOpen)}>
-					{this.state.leftNavOpen ? 
+					{this.state.leftNavOpen ?
 						<IconButton style={style.iconButton} onClick={this.closeLeftNav.bind(this)}><NavigationChevronLeft></NavigationChevronLeft></IconButton> : 
 						<IconButton style={style.iconButton} onClick={this.openLeftNav.bind(this)}><NavigationChevronRight></NavigationChevronRight></IconButton>}
 					<h2 style={this.getTitleStyle(style.title, this.state.query)}>Pokélytics</h2>
