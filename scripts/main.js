@@ -10,6 +10,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import LandingPage from './components/LandingPage'
 import AppPage from './components/AppPage'
 import Pokemons from './components/Pokemons'
+import Graph from './components/Graph'
 
 import configureStore from './store/configureStore'
 
@@ -30,6 +31,7 @@ var routes = (
 	<Provider store={store}>
 		<Router history={history}>
 			<Route path="/welcome" component={LandingPage}></Route>
+			<Route path="/graphs" component={Graph}></Route>
 			<Route path="/" component={AppPage}>
 				<Route path="pokemons" component={Pokemons}></Route>
 			</Route>
