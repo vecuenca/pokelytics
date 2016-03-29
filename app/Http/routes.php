@@ -15,14 +15,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('api/pokemon',
-	'PokemonController', ['only' => ['index', 'show', 'put']]);
-
-Route::get('api/pokemon/all', 'PokemonController@index');
-Route::post('api/pokemon', 'PokemonController@put');
-
-Route::get('api/trainer/{id}', 'TrainerController@show');
-
+Route::post('api/pokemon', 'PokemonController@query');
 
 /*
 |--------------------------------------------------------------------------

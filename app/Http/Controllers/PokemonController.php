@@ -9,21 +9,13 @@ use DB;
 
 class PokemonController extends Controller
 {
-    /**
-     * Grab all Pokemon
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $pokemon = DB::select('select * from pokemons');
-        return json_encode($pokemon);
-    }
-
-    public function put(Request $r) {
+    public function query(Request $r) {
         if ($r->has('query')) {
             try {
                 $result = DB::select($r->get('query'));
+                if (empty($result)) {
+                    return "Successfully executed query";
+                }
             } catch (\PDOException $e) {
                 return $e->getMessage();
             }
