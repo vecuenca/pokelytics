@@ -7,36 +7,24 @@ import { syncReduxAndRouter } from 'redux-simple-router'
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
 // Components
-import LandingPage from './components/LandingPage'
 import AppPage from './components/AppPage'
-import Pokemons from './components/Pokemons'
 import Graph from './components/Graph'
 
-import configureStore from './store/configureStore'
-
-const store = configureStore()
 const history = createHistory();
-
-syncReduxAndRouter(history, store)
  
 /* 
 	Needed for on touch tap
 */
-injectTapEventPlugin();
+injectTapEventPlugin(); 
 
 /*  
   Routes
 */
 var routes = (
-	<Provider store={store}>
-		<Router history={history}>
-			<Route path="/welcome" component={LandingPage}></Route>
-			<Route path="/graphs" component={Graph}></Route>
-			<Route path="/" component={AppPage}>
-				<Route path="pokemons" component={Pokemons}></Route>
-			</Route>
-		</Router>
-  	</Provider>
+	<Router history={history}>
+		<Route path="/graphs" component={Graph}></Route>
+		<Route path="/" component={AppPage}></Route>
+	</Router>
 )
 
 ReactDOM.render(routes, document.querySelector('#main'));
