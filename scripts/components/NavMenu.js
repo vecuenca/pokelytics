@@ -80,7 +80,7 @@ class NavMenu extends React.Component {
 			<FlatButton
 			      label="Cancel"
 			      secondary={true}
-			      onTouchTap={this.closePokemonMovesDialog}
+			      onTouchTap={this.closePokemonMovesDialog.bind(this)}
 			/>,
 		      <FlatButton
 				label="Submit"
@@ -115,7 +115,7 @@ class NavMenu extends React.Component {
 				modal={false}
 				actions={this.getPokemonMovesDialogActions()}
 				open={this.state.openPokemonMovesDialog}
-				onRequestClose={this.closePokemonMovesDialog}
+				onRequestClose={this.closePokemonMovesDialog.bind(this)}
 				style={dialogStyle}>
 				<div>
 					<AutoComplete
