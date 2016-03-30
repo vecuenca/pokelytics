@@ -144,7 +144,7 @@ class Graph extends React.Component {
 					onClick={() => {window.location = '/'} }>
 					<NavigationChevronLeft></NavigationChevronLeft>
 				</FloatingActionButton>
-				<h3 style={{textAlign: 'center'}}>Number of pokemons grouped by type</h3>
+				<h3 style={{textAlign: 'center'}}>Number of Pokemon grouped by type</h3>
 				<BarChart
 					title={title}
 					width={width}
