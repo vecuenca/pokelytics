@@ -19,7 +19,7 @@ class PokemonMove extends Migration
             $table->foreign('move')->references('id')->on('moves');
             $table->integer('learned_at');
             // Set the composite key of this join table
-            $table->primary(['pokemon', 'move', 'learned_at']);
+            $table->primary(['pokemon', 'move']);
         });
     }
 
