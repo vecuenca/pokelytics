@@ -59,7 +59,7 @@ class Popularity extends React.Component {
 		chartSeries = [
 			{
 				field: 'COUNT',
-				name: 'Number of Pokemons',
+				name: 'Number of Pokemon',
 				color: '#ff7f0e'
 			}],
 		// your x accessor
@@ -101,7 +101,7 @@ class Popularity extends React.Component {
 					onClick={() => {window.location = '/'} }>
 					<NavigationChevronLeft></NavigationChevronLeft>
 				</FloatingActionButton>
-				<h3 style={{textAlign: 'center'}}>Most popular pokemons</h3>
+				<h3 style={{textAlign: 'center'}}>Most popular Pokemon</h3>
 				<BarChart
 					title={title}
 					width={width}
