@@ -8,6 +8,8 @@ import AutoComplete from 'material-ui/lib/auto-complete';
 import FlatButton from 'material-ui/lib/flat-button';
 import Dialog from 'material-ui/lib/dialog';
 import Divider from 'material-ui/lib/divider';
+import Popover from 'material-ui/lib/popover/popover';
+import PopoverAnimationFromTop from 'material-ui/lib/popover/popover-animation-from-top';
 
 // icons
 import AvPlaylistAdd from 'material-ui/lib/svg-icons/av/playlist-add'
@@ -40,14 +42,49 @@ class NavMenu extends React.Component {
 			locationList: [],
 			// Where can i find this pokemon
 			openPokemonLocationDialog: false,
-			pokemonLocationDiagOpen: false
+			pokemonLocationDiagOpen: false,
+			// For popovers
+			anchorOrigin: {"horizontal":"right","vertical":"top"},
+			targetOrigin: {"horizontal":"left","vertical":"top"},
+			openPopover: false,
+			anchorEl: undefined,
+			autocompleteDataSource: [],
+			preloadedAutcompleteDataSource: false
 		}
+	}
+
+	componentDidMount() {
+		let p1 = this.props.query("SELECT name from pokemons")
+		let p2 = this.props.query("SELECT name from locations")
+
+		Promise.all([p1, p2]).then(([res1, res2]) => {
+			var json = JSON.parse(res1);
+			json.shift();
+			var pokemonList = [];
+
+			for (var i in json)
+				pokemonList.push(json[i].name);
+			
+			// work with locationList
+			var json2 = JSON.parse(res2);
+			json2.shift();
+			var locationList = [];
+
+			for (var i in json2)
+				locationList.push(json2[i].name);
+
+			this.setState({
+				locationList: locationList,
+				pokemonList: pokemonList,
+				preloadedAutcompleteDataSource: true
+			})
+		});
 	}
 
 	openTableSchemaDialog(dialogContent, dialogTitle) {
 		this.setState({
-			openTableSchemaDialog: true, 
-			tableSchemaDialogContent: dialogContent, 
+			openTableSchemaDialog: true,
+			tableSchemaDialogContent: dialogContent,
 			tableSchemaDialogTitle: dialogTitle
 		})
 	}
@@ -58,90 +95,15 @@ class NavMenu extends React.Component {
 		})
 	}
 
-	// Populate autocomplete's data source
-	openPokemonMovesDialog() {
-		// Get pokemon names and store it in state
-		this.props.query("SELECT name from pokemons").then( res => {
-			var json = JSON.parse(res);
-			json.shift();
-			var result = [];
-
-			for (var i in json)
-				result.push(json[i].name);
-
-			this.setState({
-				pokemonList: result
-			})
-		});
-
-		this.setState({
-			openPokemonMovesDialog: true,
-		})
-	}
-
-	closePokemonMovesDialog() {
-		this.setState({
-			openPokemonMovesDialog: false
-		})
-	}
-
-	getDialogActions(closePokemonMovesDialog, handlePokemonMovesDialogSubmit) {
-		return [
-			<FlatButton
-			      label="Cancel"
-			      secondary={true}
-			      onTouchTap={closePokemonMovesDialog}
-			/>,
-		      <FlatButton
-				label="Submit"
-				primary={true}
-				keyboardFocused={true}
-				onTouchTap={handlePokemonMovesDialogSubmit}
-		      />,
-		]
-	}
-
-	handlePokemonMovesDialogSubmit() {
-		// run the query here
-		let val = this.refs['pkmnMoveDiag'].getValue();
+	handlePokemonMovesDialogSubmit(val) {
 		var query = 
 		"SELECT m.*, pm.learned_at \r\n\
 FROM pokemons p, pokemon_moves pm, moves m \r\n\
 WHERE pokemon = p.id and move = m.id and p.name='" + val + "'";
 		this.props.displayAndSubmitQuery(query);
-		
-		this.closePokemonMovesDialog();
 	};
 
-	openPokemonAvailableDialog() {
-		// Get pokemon names and store it in state
-		this.props.query("SELECT name from locations").then( res => {
-			var json = JSON.parse(res);
-			json.shift();
-			var result = [];
-
-			for (var i in json)
-				result.push(json[i].name);
-
-			this.setState({
-				locationList: result
-			})
-		});
-
-		this.setState({
-			openPokemonAvailableDialog: true,
-		})
-	}
-
-	closePokemonAvailableDialog() {
-		this.setState({
-			openPokemonAvailableDialog: false
-		})
-	}
-
-	handlePokemonAvailableDialogSubmit() {
-		// run the query here
-		let val = this.refs['pokemonAvailableDiag'].getValue();
+	handlePokemonAvailableDialogSubmit(val) {
 		var query =	
 		"select p.id as 'id', p.name as 'Pokemon', p.catch_rate as 'Catch Rate' \r\n\
 from \r\n\
@@ -150,39 +112,9 @@ join locations l on pl.location = l.id \r\n\
 join pokemons p on p.id = pl.pokemon \r\n\
 where l.name = '" + val + "'"
 		this.props.displayAndSubmitQuery(query);
-		
-		this.closePokemonAvailableDialog();
 	};
 
-	openPokemonLocationDialog() {
-		// Get pokemon names and store it in state
-		this.props.query("SELECT name from pokemons").then( res => {
-			var json = JSON.parse(res);
-			json.shift();
-			var result = [];
-
-			for (var i in json)
-				result.push(json[i].name);
-
-			this.setState({
-				pokemonList: result
-			})
-		});
-
-		this.setState({
-			openPokemonLocationDialog: true,
-		})
-	}
-
-	closePokemonLocationDialog() {
-		this.setState({
-			openPokemonLocationDialog: false
-		})
-	}
-
-	handlePokemonLocationDialogSubmit() {
-		// run the query here
-		let val = this.refs['pokemonLocationDiag'].getValue();
+	handlePokemonLocationDialogSubmit(val) {
 		var query = 	"select l.name as 'Location' \r\n\
 FROM \r\n\
 pokemon_locations pl \r\n\
@@ -190,14 +122,53 @@ JOIN locations l on pl.location = l.id \r\n\
 JOIN pokemons p on p.id = pl.pokemon \r\n\
 WHERE p.name = '" + val + "'";
 		this.props.displayAndSubmitQuery(query);
-		
-		this.setState({
-			openPokemonLocationDialog: false
-		})
 	};
 
+	openTrainerDialog()  {
+
+	}
+
+	openPopover({
+		dataSource,
+		submitHandler,
+		hintText
+	}, event) {
+		this.setState({
+			openPopover: true,
+			autocompleteDataSource: dataSource,
+			autocompleteHintText: hintText,
+			anchorEl: event.currentTarget,
+			autocompleteSubmitHandler: (val) => { 
+				submitHandler(val); 
+				this.setState({
+					openPopover: false
+				}) 
+			}
+		})
+	}
+
 	render() {
+		if (!this.state.preloadedAutcompleteDataSource) return <h3>Loading...</h3>
 		return (<LeftNav open={this.props.open}>
+			<Popover
+				open={this.state.openPopover}
+				anchorEl={this.state.anchorEl}
+				anchorOrigin={this.state.anchorOrigin}
+				targetOrigin={this.state.targetOrigin}
+				onRequestClose={() => { this.setState({ openPopover: false })}}
+				animation={PopoverAnimationFromTop}>
+				<div style={style.popover}>
+					{ this.state.autocompleteDataSource ?
+					<AutoComplete
+						ref='popoverAutocomplete'
+						hintText={this.state.autocompleteHintText}
+						onNewRequest={this.state.autocompleteSubmitHandler}
+						filter={AutoComplete.fuzzyFilter}
+						dataSource={this.state.autocompleteDataSource}
+						triggerUpdateOnFocus={true} /> : <h3>Loading...</h3>
+					}
+				</div>
+			</Popover>
 			<Dialog
 				title={this.state.tableSchemaDialogTitle}
 				modal={false}
@@ -205,54 +176,6 @@ WHERE p.name = '" + val + "'";
 				onRequestClose={this.closeTableSchemaDialog.bind(this)}
 				style={dialogStyle}>
 				{this.state.tableSchemaDialogContent}
-			</Dialog>
-			<Dialog
-				title='Choose a Pokemon to view their moves'
-				modal={false}
-				actions={this.getDialogActions(this.closePokemonMovesDialog.bind(this), this.handlePokemonMovesDialogSubmit.bind(this))}
-				open={this.state.openPokemonMovesDialog}
-				onRequestClose={this.closePokemonMovesDialog.bind(this)}
-				style={dialogStyle}>
-				<div>
-					<AutoComplete
-						ref='pkmnMoveDiag'
-						hintText="Enter Pokemon name"
-						filter={AutoComplete.fuzzyFilter}
-						dataSource={this.state.pokemonList}
-						triggerUpdateOnFocus={true} />
-				</div>
-			</Dialog>
-			<Dialog
-				title='What can I catch at this location?'
-				modal={false}
-				actions={this.getDialogActions(this.closePokemonAvailableDialog.bind(this), this.handlePokemonAvailableDialogSubmit.bind(this))}
-				open={this.state.openPokemonAvailableDialog}
-				onRequestClose={this.closePokemonAvailableDialog.bind(this)}
-				style={dialogStyle}>
-				<div>
-					<AutoComplete
-						ref='pokemonAvailableDiag'
-						hintText="Enter Location"
-						filter={AutoComplete.fuzzyFilter}
-						dataSource={this.state.locationList}
-						triggerUpdateOnFocus={true} />
-				</div>
-			</Dialog>
-			<Dialog
-				title='Where can I catch this pokemon?'
-				modal={false}
-				actions={this.getDialogActions(this.closePokemonLocationDialog.bind(this), this.handlePokemonLocationDialogSubmit.bind(this))}
-				open={this.state.openPokemonLocationDialog}
-				onRequestClose={this.closePokemonLocationDialog.bind(this)}
-				style={dialogStyle}>
-				<div>
-					<AutoComplete
-						ref='pokemonLocationDiag'
-						hintText="Enter Pokemon"
-						filter={AutoComplete.fuzzyFilter}
-						dataSource={this.state.pokemonList}
-						triggerUpdateOnFocus={true} />
-				</div>
 			</Dialog>
 			<List>
 				<ListItem
@@ -264,10 +187,10 @@ WHERE p.name = '" + val + "'";
 			<Divider></Divider>
 			<ListItem
 				primaryText="Table Schemas"
-        leftIcon={<ActionInfo />}
-        initiallyOpen={false}
-        primaryTogglesNestedList={true}
-        nestedItems={[
+			        leftIcon={<ActionInfo />}
+			        initiallyOpen={false}
+			        primaryTogglesNestedList={true}
+			        nestedItems={[
 					<ListItem
 						primaryText="Pokemon"
 						onTouchTap={this.openTableSchemaDialog.bind(this, Schema.dialogData[0][1], Schema.dialogData[0][0])}
@@ -304,20 +227,32 @@ WHERE p.name = '" + val + "'";
 					primaryText="All Pokemon"
 					leftIcon={<EditorFormatListNumbered></EditorFormatListNumbered>}/>
 				<ListItem
-					primaryText="Where can I catch this pokemon?"
-					onClick={this.openPokemonLocationDialog.bind(this)}
+					primaryText="Where is this pokemon?"
+					onClick={this.openPopover.bind(this, {
+						dataSource: this.state.pokemonList,
+						submitHandler: this.handlePokemonLocationDialogSubmit.bind(this),
+						hintText: 'Pokemon'
+					})}
 					leftIcon={<AvAlbum></AvAlbum>}/>
 				<ListItem
 					primaryText="What can I catch here?"
-					onClick={this.openPokemonAvailableDialog.bind(this)}
+					onClick={this.openPopover.bind(this, {
+						dataSource: this.state.locationList,
+						submitHandler: this.handlePokemonAvailableDialogSubmit.bind(this),
+						hintText: 'Location'
+					})}
 					leftIcon={<MapsPlace></MapsPlace>}/>
 				<ListItem
-					primaryText="Find a Pokemon's moves"
-					onClick={this.openPokemonMovesDialog.bind(this)}
+					primaryText="Pokemon moves"
+					onClick={this.openPopover.bind(this, {
+						dataSource: this.state.pokemonList,
+						submitHandler: this.handlePokemonMovesDialogSubmit.bind(this),
+						hintText: 'Pokemon'
+					})}
 					leftIcon={<ImageFlashOn></ImageFlashOn>}/>
 				<ListItem
 					primaryText="Find a Trainer's Pokemon"
-					onClick="{this.openTrainerDialog.bind(this)}"
+					onClick={this.openTrainerDialog.bind(this)}
 					leftIcon={<ImageFlashOn></ImageFlashOn>}/>
 			</List>
 			<Divider></Divider>
@@ -333,6 +268,13 @@ WHERE p.name = '" + val + "'";
 	}
 }
 
+const style = {
+	popover: {
+		padding: '5px',
+		paddingLeft: '15px',
+		paddingRight: '15px'
+	}
+}
 
 const dialogStyle = {
 	whiteSpace: 'pre-wrap'

@@ -3,9 +3,6 @@ import request from 'superagent';
 var Chart = require('react-d3-core').Chart;
 var BarChart = require('react-d3-basic').BarChart;
 
-import FloatingActionButton from 'material-ui/lib/floating-action-button';
-import NavigationChevronLeft from 'material-ui/lib/svg-icons/navigation/chevron-left';
-
 class Popularity extends React.Component {
 	constructor(props) {
 		super(props);
@@ -90,17 +87,6 @@ class Popularity extends React.Component {
 		
 		return (
 			<div>
-				<FloatingActionButton 
-					style={{ 
-						marginTop: '10px', 
-						marginLeft: '10px',
-						position: 'fixed',
-						top: 0,
-						left: 0
-					}} 
-					onClick={() => {window.location = '/'} }>
-					<NavigationChevronLeft></NavigationChevronLeft>
-				</FloatingActionButton>
 				<h3 style={{textAlign: 'center'}}>Most popular Pokemon</h3>
 				<BarChart
 					title={title}
