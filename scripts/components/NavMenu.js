@@ -11,6 +11,7 @@ import Divider from 'material-ui/lib/divider';
 
 // icons
 import AvPlaylistAdd from 'material-ui/lib/svg-icons/av/playlist-add'
+import AvAlbum from 'material-ui/lib/svg-icons/av/album'
 import EditorFormatListNumbered from 'material-ui/lib/svg-icons/editor/format-list-numbered'
 import SocialGroup from 'material-ui/lib/svg-icons/social/group'
 import MapsPlace from 'material-ui/lib/svg-icons/maps/place'
@@ -32,7 +33,14 @@ class NavMenu extends React.Component {
 			// Pokemon Moves Dialog
 			openPokemonMovesDialog: false,
 			moveDiagOpen: false,
-			pokemonList: []
+			pokemonList: [],
+			// Pokemon Available at location X
+			openPokemonAvailableDialog: false,
+			pokemonAvailableDiagOpen: false,
+			locationList: [],
+			// Where can i find this pokemon
+			openPokemonLocationDialog: false,
+			pokemonLocationDiagOpen: false
 		}
 	}
 
@@ -77,18 +85,18 @@ class NavMenu extends React.Component {
 		})
 	}
 
-	getPokemonMovesDialogActions() {
+	getDialogActions(closePokemonMovesDialog, handlePokemonMovesDialogSubmit) {
 		return [
 			<FlatButton
 			      label="Cancel"
 			      secondary={true}
-			      onTouchTap={this.closePokemonMovesDialog.bind(this)}
+			      onTouchTap={closePokemonMovesDialog}
 			/>,
 		      <FlatButton
 				label="Submit"
 				primary={true}
 				keyboardFocused={true}
-				onTouchTap={this.handlePokemonMovesDialogSubmit.bind(this)}
+				onTouchTap={handlePokemonMovesDialogSubmit}
 		      />,
 		]
 	}
@@ -96,10 +104,96 @@ class NavMenu extends React.Component {
 	handlePokemonMovesDialogSubmit() {
 		// run the query here
 		let val = this.refs['pkmnMoveDiag'].getValue();
-		var query = "SELECT m.*, pm.learned_at from pokemons p, pokemon_moves pm, moves m  WHERE pokemon = p.id and move = m.id and p.name='" + val + "'";
+		var query = 
+		"SELECT m.*, pm.learned_at \r\n\
+FROM pokemons p, pokemon_moves pm, moves m \r\n\
+WHERE pokemon = p.id and move = m.id and p.name='" + val + "'";
 		this.props.displayAndSubmitQuery(query);
 		
 		this.closePokemonMovesDialog();
+	};
+
+	openPokemonAvailableDialog() {
+		// Get pokemon names and store it in state
+		this.props.query("SELECT name from locations").then( res => {
+			var json = JSON.parse(res);
+			json.shift();
+			var result = [];
+
+			for (var i in json)
+				result.push(json[i].name);
+
+			this.setState({
+				locationList: result
+			})
+		});
+
+		this.setState({
+			openPokemonAvailableDialog: true,
+		})
+	}
+
+	closePokemonAvailableDialog() {
+		this.setState({
+			openPokemonAvailableDialog: false
+		})
+	}
+
+	handlePokemonAvailableDialogSubmit() {
+		// run the query here
+		let val = this.refs['pokemonAvailableDiag'].getValue();
+		var query =	
+		"select p.id as 'id', p.name as 'Pokemon', p.catch_rate as 'Catch Rate' \r\n\
+from \r\n\
+pokemon_locations pl \r\n\
+join locations l on pl.location = l.id \r\n\
+join pokemons p on p.id = pl.pokemon \r\n\
+where l.name = '" + val + "'"
+		this.props.displayAndSubmitQuery(query);
+		
+		this.closePokemonAvailableDialog();
+	};
+
+	openPokemonLocationDialog() {
+		// Get pokemon names and store it in state
+		this.props.query("SELECT name from pokemons").then( res => {
+			var json = JSON.parse(res);
+			json.shift();
+			var result = [];
+
+			for (var i in json)
+				result.push(json[i].name);
+
+			this.setState({
+				pokemonList: result
+			})
+		});
+
+		this.setState({
+			openPokemonLocationDialog: true,
+		})
+	}
+
+	closePokemonLocationDialog() {
+		this.setState({
+			openPokemonLocationDialog: false
+		})
+	}
+
+	handlePokemonLocationDialogSubmit() {
+		// run the query here
+		let val = this.refs['pokemonLocationDiag'].getValue();
+		var query = 	"select l.name as 'Location' \r\n\
+FROM \r\n\
+pokemon_locations pl \r\n\
+JOIN locations l on pl.location = l.id \r\n\
+JOIN pokemons p on p.id = pl.pokemon \r\n\
+WHERE p.name = '" + val + "'";
+		this.props.displayAndSubmitQuery(query);
+		
+		this.setState({
+			openPokemonLocationDialog: false
+		})
 	};
 
 	render() {
@@ -115,7 +209,7 @@ class NavMenu extends React.Component {
 			<Dialog
 				title='Choose a Pokemon to view their moves'
 				modal={false}
-				actions={this.getPokemonMovesDialogActions()}
+				actions={this.getDialogActions(this.closePokemonMovesDialog.bind(this), this.handlePokemonMovesDialogSubmit.bind(this))}
 				open={this.state.openPokemonMovesDialog}
 				onRequestClose={this.closePokemonMovesDialog.bind(this)}
 				style={dialogStyle}>
@@ -123,6 +217,38 @@ class NavMenu extends React.Component {
 					<AutoComplete
 						ref='pkmnMoveDiag'
 						hintText="Enter Pokemon name"
+						filter={AutoComplete.fuzzyFilter}
+						dataSource={this.state.pokemonList}
+						triggerUpdateOnFocus={true} />
+				</div>
+			</Dialog>
+			<Dialog
+				title='What can I catch at this location?'
+				modal={false}
+				actions={this.getDialogActions(this.closePokemonAvailableDialog.bind(this), this.handlePokemonAvailableDialogSubmit.bind(this))}
+				open={this.state.openPokemonAvailableDialog}
+				onRequestClose={this.closePokemonAvailableDialog.bind(this)}
+				style={dialogStyle}>
+				<div>
+					<AutoComplete
+						ref='pokemonAvailableDiag'
+						hintText="Enter Location"
+						filter={AutoComplete.fuzzyFilter}
+						dataSource={this.state.locationList}
+						triggerUpdateOnFocus={true} />
+				</div>
+			</Dialog>
+			<Dialog
+				title='Where can I catch this pokemon?'
+				modal={false}
+				actions={this.getDialogActions(this.closePokemonLocationDialog.bind(this), this.handlePokemonLocationDialogSubmit.bind(this))}
+				open={this.state.openPokemonLocationDialog}
+				onRequestClose={this.closePokemonLocationDialog.bind(this)}
+				style={dialogStyle}>
+				<div>
+					<AutoComplete
+						ref='pokemonLocationDiag'
+						hintText="Enter Pokemon"
 						filter={AutoComplete.fuzzyFilter}
 						dataSource={this.state.pokemonList}
 						triggerUpdateOnFocus={true} />
@@ -173,12 +299,12 @@ class NavMenu extends React.Component {
 					primaryText="All Pokemon"
 					leftIcon={<EditorFormatListNumbered></EditorFormatListNumbered>}/>
 				<ListItem
-					primaryText="Trainers"
-					onClick={this.props.displayAndSubmitQuery.bind(this, 'SELECT * from trainers')}
-					leftIcon={<SocialGroup></SocialGroup>}/>
+					primaryText="Where can I catch this pokemon?"
+					onClick={this.openPokemonLocationDialog.bind(this)}
+					leftIcon={<AvAlbum></AvAlbum>}/>
 				<ListItem
-					primaryText="Pokemon Locations"
-					onClick={this.props.displayAndSubmitQuery.bind(this, 'SELECT * from locations')}
+					primaryText="What can I catch here?"
+					onClick={this.openPokemonAvailableDialog.bind(this)}
 					leftIcon={<MapsPlace></MapsPlace>}/>
 				<ListItem
 					primaryText="Find a Pokemon's moves"
