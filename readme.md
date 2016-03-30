@@ -14,10 +14,41 @@ for your .homestead/Homestead.yaml folders use:
         - map: homestead.app
           to: /home/vagrant/Code/pokelytics/public
 
-4. After setting up homestead, vagrant up your box, and vagrant ssh into it, navigate to the pokelytics directory.
-5. type: composer install
-6. php artisan migrate
-7. php artisan db:seed
-8. npm install
+After setting up homestead:  
+4. cd ~/Homestead  
+5. vagrant up  
+6. vagrant ssh  
+7. cd ~/Code/pokelytics  
+8. composer install  
+9. Create a .env file:  
 
-Navigate to homestead.app to view the app.
+        APP_ENV=local
+        APP_DEBUG=true
+        APP_KEY=SomeRandomString
+        APP_URL=http://localhost
+        
+        DB_HOST=127.0.0.1
+        DB_PORT=3306
+        DB_DATABASE=homestead
+        DB_USERNAME=homestead
+        DB_PASSWORD=secret
+        
+        CACHE_DRIVER=file
+        SESSION_DRIVER=file
+        QUEUE_DRIVER=sync
+        
+        REDIS_HOST=127.0.0.1
+        REDIS_PASSWORD=null
+        REDIS_PORT=6379
+        
+        MAIL_DRIVER=smtp
+        MAIL_HOST=mailtrap.io
+        MAIL_PORT=2525
+        MAIL_USERNAME=null
+        MAIL_PASSWORD=null
+        MAIL_ENCRYPTION=null
+
+10 php artisan migrate  
+11 php artisan db:seed  
+
+Open a browser and go to: homestead.app
