@@ -2,8 +2,6 @@ import React  from 'react';
 import ReactDOM  from 'react-dom';
 import { Router, Route, IndexRoute } from 'react-router';
 import { createHistory } from 'history';
-import { Provider } from 'react-redux'
-import { syncReduxAndRouter } from 'redux-simple-router'
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
 // Components

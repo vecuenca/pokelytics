@@ -12,6 +12,7 @@ class PokemonTrainersTableSeeder extends Seeder
     public function run()
     {
         $ptrainer_array = [
+<<<<<<< HEAD
             [1, 1, "Bulbasaur", 1, 2, 3, 4],
             [151, 1, "Mewtwo", 1, 2, 3, 4],
             [6, 1, "Charizard", 6, 21, 10, 32],
@@ -33,6 +34,10 @@ class PokemonTrainersTableSeeder extends Seeder
             [63,3,"Abra",11,24,16,33],
             [107,3,"Dude",24,36,11,10]
             ];
+=======
+            [1, 1, "Vassos", 13, 14, 15, 20]
+        ];
+>>>>>>> origin/master
 
         foreach ($ptrainer_array as list($a,$b,$c,$d,$e,$f,$g))
         {
