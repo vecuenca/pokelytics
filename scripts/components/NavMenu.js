@@ -20,6 +20,9 @@ import MapsPlace from 'material-ui/lib/svg-icons/maps/place'
 import ActionInfo from 'material-ui/lib/svg-icons/action/info';
 import ActionHome from 'material-ui/lib/svg-icons/action/home';
 import ImageFlashOn from 'material-ui/lib/svg-icons/image/flash-on';
+import Group from 'material-ui/lib/svg-icons/social/group';
+import WhatsHot from 'material-ui/lib/svg-icons/social/whatshot';
+import GroupWork from 'material-ui/lib/svg-icons/action/group-work';
 
 import * as Schema from '../constants/Schema'
 
@@ -36,6 +39,10 @@ class NavMenu extends React.Component {
 			openPokemonMovesDialog: false,
 			moveDiagOpen: false,
 			pokemonList: [],
+			// Pokemon Trainers Dialog
+			openPokemonTrainersDialog: false,
+			trainerDiagOpen: false,
+			trainerList: [],
 			// Pokemon Available at location X
 			openPokemonAvailableDialog: false,
 			pokemonAvailableDiagOpen: false,
@@ -56,8 +63,10 @@ class NavMenu extends React.Component {
 	componentDidMount() {
 		let p1 = this.props.query("SELECT name from pokemons")
 		let p2 = this.props.query("SELECT name from locations")
+		let p3 = this.props.query("SELECT name from trainers")
 
-		Promise.all([p1, p2]).then(([res1, res2]) => {
+		Promise.all([p1, p2, p3]).then(([res1, res2, res3]) => {
+			// work with pokemons
 			var json = JSON.parse(res1);
 			json.shift();
 			var pokemonList = [];
@@ -73,9 +82,17 @@ class NavMenu extends React.Component {
 			for (var i in json2)
 				locationList.push(json2[i].name);
 
+			// work with trainerList
+			var json3 = JSON.parse(res3);
+			json3.shift();
+			var trainerList = [];
+			for (var i in json3)
+			    trainerList.push(json3[i].name);
+
 			this.setState({
 				locationList: locationList,
 				pokemonList: pokemonList,
+				trainerList: trainerList,
 				preloadedAutcompleteDataSource: true
 			})
 		});
@@ -123,6 +140,24 @@ JOIN pokemons p on p.id = pl.pokemon \r\n\
 WHERE p.name = '" + val + "'";
 		this.props.displayAndSubmitQuery(query);
 	};
+
+	handlePokemonTrainersDialogSubmit(val) {
+		var id;
+
+		var res  = this.props.query("SELECT t.id from trainers t where t.name='" + val + "'").then( res => {
+			var json = JSON.parse(res);
+			json.shift();
+			id = json[0].id;
+			var query = "select pt.name, m1.name AS move1, m2.name AS move2, m3.name AS move3, m4.name AS move4 \r\n\
+FROM homestead.pokemon_trainers pt \r\n\
+JOIN homestead.moves m1 ON pt.move1 = m1.id AND pt.trainer ='" + id +"'\r\n\
+JOIN homestead.moves m2 ON pt.move2 = m2.id AND pt.trainer ='" + id +"'\r\n\
+JOIN homestead.moves m3 ON pt.move3 = m3.id AND pt.trainer ='" + id +"'\r\n\
+JOIN homestead.moves m4 ON pt.move4 = m4.id AND pt.trainer ='" + id +"'";
+
+			this.props.displayAndSubmitQuery(query);
+		});
+	}
 
 	openTrainerDialog()  {
 
@@ -227,7 +262,7 @@ WHERE p.name = '" + val + "'";
 					primaryText="All Pokemon"
 					leftIcon={<EditorFormatListNumbered></EditorFormatListNumbered>}/>
 				<ListItem
-					primaryText="Where is this pokemon?"
+					primaryText="Pokemon Location"
 					onClick={this.openPopover.bind(this, {
 						dataSource: this.state.pokemonList,
 						submitHandler: this.handlePokemonLocationDialogSubmit.bind(this),
@@ -252,17 +287,23 @@ WHERE p.name = '" + val + "'";
 					leftIcon={<ImageFlashOn></ImageFlashOn>}/>
 				<ListItem
 					primaryText="Find a Trainer's Pokemon"
-					onClick={this.openTrainerDialog.bind(this)}
-					leftIcon={<ImageFlashOn></ImageFlashOn>}/>
+					onClick={this.openPopover.bind(this, {
+						dataSource: this.state.trainerList,
+						submitHandler: this.handlePokemonTrainersDialogSubmit.bind(this),
+						hintText: 'Trainer'
+					})}
+					leftIcon={<Group></Group>}/>
 			</List>
 			<Divider></Divider>
 			<List subheader="Analytics">
 				<ListItem
 					primaryText="Pokemon grouped by type"
-					onClick={() => { window.location='/graphs' }} />
+					onClick={() => { window.location='/graphs' }}
+					leftIcon={<GroupWork></GroupWork>}/>
 				<ListItem
 					primaryText="Most popular Pokemon"
-					onClick={() => { window.location='/Popularity' }} />
+					onClick={() => { window.location='/Popularity' }}
+					leftIcon={<WhatsHot></WhatsHot>}/>
 			</List>
 		</LeftNav>);
 	}
