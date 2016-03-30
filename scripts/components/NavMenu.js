@@ -136,36 +136,41 @@ class NavMenu extends React.Component {
 				</ListItem>
 			</List>
 			<Divider></Divider>
-			<List subheader="Table Schemas">
-				<ListItem
-					primaryText="Pokemon"
-					onTouchTap={this.openTableSchemaDialog.bind(this, Schema.dialogData[0][1], Schema.dialogData[0][0])}
-					leftIcon={<ActionInfo />}/>
-				<ListItem
-					primaryText="Trainers"
-					onTouchTap={this.openTableSchemaDialog.bind(this, Schema.dialogData[1][1], Schema.dialogData[1][0])}
-					leftIcon={<ActionInfo />}/>
-				<ListItem
-					primaryText="Moves"
-					onTouchTap={this.openTableSchemaDialog.bind(this, Schema.dialogData[2][1], Schema.dialogData[2][0])}
-					leftIcon={<ActionInfo />}/>
-				<ListItem
-					primaryText="Locations"
-					onTouchTap={this.openTableSchemaDialog.bind(this, Schema.dialogData[3][1], Schema.dialogData[3][0])}
-					leftIcon={<ActionInfo />}/>
-				<ListItem
-					primaryText="Pokemon Moves"
-					onTouchTap={this.openTableSchemaDialog.bind(this, Schema.dialogData[4][1], Schema.dialogData[4][0])}
-					leftIcon={<ActionInfo />}/>
-				<ListItem
-					primaryText="Pokemon Locations"
-					onTouchTap={this.openTableSchemaDialog.bind(this, Schema.dialogData[5][1], Schema.dialogData[5][0])}
-					leftIcon={<ActionInfo />}/>
-				<ListItem
-					primaryText="Pokemon Trainers"
-					onTouchTap={this.openTableSchemaDialog.bind(this, Schema.dialogData[6][1], Schema.dialogData[6][0])}
-					leftIcon={<ActionInfo />}/>
-			</List>
+			<ListItem
+				primaryText="Table Schemas"
+        leftIcon={<ActionInfo />}
+        initiallyOpen={false}
+        primaryTogglesNestedList={true}
+        nestedItems={[
+					<ListItem
+						primaryText="Pokemon"
+						onTouchTap={this.openTableSchemaDialog.bind(this, Schema.dialogData[0][1], Schema.dialogData[0][0])}
+						/>,
+					<ListItem
+						primaryText="Trainers"
+						onTouchTap={this.openTableSchemaDialog.bind(this, Schema.dialogData[1][1], Schema.dialogData[1][0])}
+						/>,
+					<ListItem
+						primaryText="Moves"
+						onTouchTap={this.openTableSchemaDialog.bind(this, Schema.dialogData[2][1], Schema.dialogData[2][0])}
+						/>,
+					<ListItem
+						primaryText="Locations"
+						onTouchTap={this.openTableSchemaDialog.bind(this, Schema.dialogData[3][1], Schema.dialogData[3][0])}
+						/>,
+					<ListItem
+						primaryText="Pokemon Moves"
+						onTouchTap={this.openTableSchemaDialog.bind(this, Schema.dialogData[4][1], Schema.dialogData[4][0])}
+						/>,
+					<ListItem
+						primaryText="Pokemon Locations"
+						onTouchTap={this.openTableSchemaDialog.bind(this, Schema.dialogData[5][1], Schema.dialogData[5][0])}
+						/>,
+					<ListItem
+						primaryText="Pokemon Trainers"
+						onTouchTap={this.openTableSchemaDialog.bind(this, Schema.dialogData[6][1], Schema.dialogData[6][0])}
+						/>,]}
+			/>
 			<Divider></Divider>
 			<List subheader="Predefined SQL Queries">
 				<ListItem
@@ -184,14 +189,18 @@ class NavMenu extends React.Component {
 					primaryText="Find a Pokemon's moves"
 					onClick={this.openPokemonMovesDialog.bind(this)}
 					leftIcon={<ImageFlashOn></ImageFlashOn>}/>
+				<ListItem
+					primaryText="Find a Trainer's Pokemon"
+					onClick="{this.openTrainerDialog.bind(this)}"
+					leftIcon={<ImageFlashOn></ImageFlashOn>}/>
 			</List>
 			<Divider></Divider>
 			<List subheader="Analytics">
 				<ListItem
-					primaryText="Pokemons grouped by type"
+					primaryText="Pokemon grouped by type"
 					onClick={() => { window.location='/graphs' }} />
 				<ListItem
-					primaryText="Most popular pokemons"
+					primaryText="Most popular Pokemon"
 					onClick={() => { window.location='/Popularity' }} />
 			</List>
 		</LeftNav>);
