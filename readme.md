@@ -4,7 +4,7 @@
 3. git clone https://github.com/vincent-cuenca/pokelytics  
 Read instructions from https://laravel.com/docs/5.2/homestead, this will setup all the dependencies to startup a local web server that contains a mysql instance etc
 
-for your .homestead/Homestead.yaml folders use:
+for your .homestead/Homestead.yaml use:
 
     folders:
         - map: ~/Code
