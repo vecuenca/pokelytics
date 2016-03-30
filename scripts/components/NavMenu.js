@@ -172,7 +172,7 @@ WHERE pokemon = p.id and move = m.id and p.name='" + val + "'";
 			var json = JSON.parse(res);
 			json.shift();
 			id = json[0].id;
-			var query = "select pt.name, m1.name AS move1, m2.name AS move2, m3.name AS move3, m4.name AS move4 \r\n\
+			var query = "SELECT pt.name, m1.name AS move1, m2.name AS move2, m3.name AS move3, m4.name AS move4 \r\n\
 FROM homestead.pokemon_trainers pt \r\n\
 JOIN homestead.moves m1 ON pt.move1 = m1.id AND pt.trainer ='" + id +"'\r\n\
 JOIN homestead.moves m2 ON pt.move2 = m2.id AND pt.trainer ='" + id +"'\r\n\
