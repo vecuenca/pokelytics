@@ -10,6 +10,7 @@ import Dialog from 'material-ui/lib/dialog';
 import Divider from 'material-ui/lib/divider';
 import Popover from 'material-ui/lib/popover/popover';
 import PopoverAnimationFromTop from 'material-ui/lib/popover/popover-animation-from-top';
+import CircularProgress from 'material-ui/lib/circular-progress';
 
 // icons
 import AvPlaylistAdd from 'material-ui/lib/svg-icons/av/playlist-add'
@@ -183,7 +184,7 @@ JOIN homestead.moves m4 ON pt.move4 = m4.id AND pt.trainer ='" + id +"'";
 	}
 
 	render() {
-		if (!this.state.preloadedAutcompleteDataSource) return <h3>Loading...</h3>
+		if (!this.state.preloadedAutcompleteDataSource) return <CircularProgress></CircularProgress>
 		return (<LeftNav open={this.props.open}>
 			<Popover
 				open={this.state.openPopover}
@@ -195,7 +196,6 @@ JOIN homestead.moves m4 ON pt.move4 = m4.id AND pt.trainer ='" + id +"'";
 				<div style={style.popover}>
 					{ this.state.autocompleteDataSource ?
 					<AutoComplete
-						ref='popoverAutocomplete'
 						hintText={this.state.autocompleteHintText}
 						onNewRequest={this.state.autocompleteSubmitHandler}
 						filter={AutoComplete.fuzzyFilter}

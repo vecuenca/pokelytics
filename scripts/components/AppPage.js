@@ -20,7 +20,7 @@ class AppPage extends React.Component {
 			query: '',
 			res: "",
 			err: "",
-			leftNavOpen: true
+			leftNavOpen: true,
 		}
 	}
 
@@ -117,7 +117,8 @@ const style = {
 		display: 'block',
 		marginLeft: '256px',
 		padding: '15px 15px 15px 15px',
-		height: '100%'
+		height: '100%',
+		position: 'relative'
 	},
 	query: {
 		display: 'block',
@@ -128,7 +129,8 @@ const style = {
 	},
 	iconButton: {
 		position: 'absolute',
-		top: '0'
+		top: '0',
+		left: '0'
 	}
 }
 

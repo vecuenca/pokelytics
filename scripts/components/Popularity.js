@@ -1,5 +1,7 @@
 import React from 'react';
 import request from 'superagent';
+import CircularProgress from 'material-ui/lib/circular-progress';
+
 var Chart = require('react-d3-core').Chart;
 var BarChart = require('react-d3-basic').BarChart;
 
@@ -66,7 +68,7 @@ class Popularity extends React.Component {
  
  		if (this.state == null)
   		{
-  			return (<p>LOADING</p>);
+  			return (<CircularProgress></CircularProgress>);
   		}
   		var chartData = [];
 
