@@ -21,9 +21,10 @@ injectTapEventPlugin();
 */
 var routes = (
 	<Router history={history}>
-		<Route path="/popularity" component={Popularity}></Route>
-		<Route path="/graphs" component={Graph}></Route>
-		<Route path="/" component={AppPage}></Route>
+		<Route path="/" component={AppPage}>
+			<Route path="popularity" component={Popularity}></Route>
+			<Route path="graphs" component={Graph}></Route>
+		</Route>
 	</Router>
 )
 

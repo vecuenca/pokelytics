@@ -7,8 +7,8 @@ import NavigationChevronRight from 'material-ui/lib/svg-icons/navigation/chevron
 import IconButton from 'material-ui/lib/icon-button';
 
 import NavMenu from './NavMenu'
-import QueryBox from './QueryBox'
-import ResultsTable from './ResultsTable'
+import SqlArea from './SqlArea'
+
 import request from 'superagent';
 
 
@@ -77,42 +77,19 @@ class AppPage extends React.Component {
 	}
 
 	getStyle(leftNavIsOpen) {
-		return Object.assign({}, style, {
+		return Object.assign({}, style.AppArea, {
 			marginLeft: leftNavIsOpen ? '256px' : '0'
 		})
 	}
 
-	getTitleStyle(defaultStyle, query) {
-		if (query !== "") {
-			return Object.assign({}, defaultStyle, {
-				display: 'none'
-			})
-		} else {
-			return Object.assign({}, defaultStyle, {
-				display: 'block'
-			})
-		}
-	}
-
-	getQueryBoxStyle(defaultStyle, query) {
-		if (query !== "") {
-			return Object.assign({}, defaultStyle, {
-				marginTop: '20px'
-			})
-		} else {
-			return Object.assign({}, defaultStyle, {
-				marginTop: '0'
-			})
-		}
-	}
-
-	renderResultsTable(dataSetString) {
-		try {
-			let dataSet = JSON.parse(dataSetString)
-			return <ResultsTable dataset={dataSetString} />
-		} catch (err) { // if error it must be from json.parse
-			return <div style={{marginLeft: '20px', marginRight: '20px'}}>{dataSetString}</div>
-		}
+	renderQueryArea() {
+		return (<SqlArea
+					query={this.state.query}
+					onSubmit={this.onSubmit.bind(this)}
+					onChange={this.onChange.bind(this)}
+					res={this.state.res}
+					err={this.state.err}
+					></SqlArea>)
 	}
 
 	render() {
@@ -127,18 +104,8 @@ class AppPage extends React.Component {
 					{this.state.leftNavOpen ?
 						<IconButton style={style.iconButton} onClick={this.closeLeftNav.bind(this)}><NavigationChevronLeft></NavigationChevronLeft></IconButton> : 
 						<IconButton style={style.iconButton} onClick={this.openLeftNav.bind(this)}><NavigationChevronRight></NavigationChevronRight></IconButton>}
-					<h2 style={this.getTitleStyle(style.title, this.state.query)}>Pokélytics</h2>
-					<h5 style={this.getTitleStyle(style.tagLine, this.state.query)} className="muted">Gotta analyze them all</h5>
-					<div style={this.getQueryBoxStyle(style.query, this.state.query)}>
-						<QueryBox
-							onSubmit={this.onSubmit.bind(this)}
-							query={this.state.query}
-							onChange={this.onChange.bind(this)}></QueryBox>
-					</div>
-					<div style={style.results}>
-						{this.state.err ? this.state.err : undefined }
-						{!this.state.err && this.state.res != "" ? this.renderResultsTable(this.state.res) : undefined}
-					</div>
+						{window.location.pathname === '/' ? this.renderQueryArea() : undefined }
+					{this.props.children}
 				</div>
 			</div>
 			);
@@ -146,16 +113,6 @@ class AppPage extends React.Component {
 
 }
 const style = {
-	title: {
-		fontSize: '56px',
-		marginBottom: '0'
-	},
-	tagLine: {
-		fontSize: '25px',
-		marginTop: '0',
-		marginBottom: '20px',
-		textAlign: 'center'
-	},
 	AppArea: {
 		display: 'block',
 		marginLeft: '256px',
@@ -172,15 +129,6 @@ const style = {
 	iconButton: {
 		position: 'absolute',
 		top: '0'
-	},
-	results: {
-		display: 'block',
-		marginTop: '25px',
-		marginLeft: '20px',
-		marginRight: '20px',
-		width: '100%',
-		margin: '0 auto',
-		marginBottom: '20px'
 	}
 }
 

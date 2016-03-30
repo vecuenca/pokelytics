@@ -13,7 +13,7 @@ class QueryBox extends React.Component {
 
 	render() {
 		return (
-			<div>
+			<div {...this.props.style}>
 				<div className="text-field multi-line">
 					<TextField
 						style={style.textField}
@@ -33,9 +33,14 @@ class QueryBox extends React.Component {
 					</TextField>
 				</div>
 				<RaisedButton
-					fullWidth={true}
 					label="submit"
 					primary={true}
+					style={{
+					    maxWidth: '800px',
+					    width: '100%',
+					    margin: '0 auto',
+					    display: 'block'
+					}}
 					onClick={e => {
 						let val = this.refs['search-bar'].getValue()
 						this.props.onSubmit(val)

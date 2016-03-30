@@ -3,6 +3,9 @@ import request from 'superagent';
 var Chart = require('react-d3-core').Chart;
 var BarChart = require('react-d3-basic').BarChart;
 
+import FloatingActionButton from 'material-ui/lib/floating-action-button';
+import NavigationChevronLeft from 'material-ui/lib/svg-icons/navigation/chevron-left';
+
 class Popularity extends React.Component {
 	constructor(props) {
 		super(props);
@@ -33,7 +36,8 @@ class Popularity extends React.Component {
 			.post('/api/pokemon')
 			.send({ query: `select p.name,count(*) as count from 
 				pokemon_trainers pt join pokemons p  on 
-				pt.pokemon = p.id group by pokemon having count(pokemon) >=1` })
+				pt.pokemon = p.id group by pokemon having count(pokemon) >=1
+				order by count desc` })
 			.end(cb.bind(this))
 	}
 	
@@ -44,7 +48,7 @@ class Popularity extends React.Component {
 		
 	}
 	render() {
-		var width = 1000,
+		var width = 1500,
 		height = 800,
 		margins = {left: 100, right: 100, top: 50, bottom: 50},
 		title = "User sample",
@@ -55,7 +59,7 @@ class Popularity extends React.Component {
 		chartSeries = [
 			{
 				field: 'COUNT',
-				name: 'index',
+				name: 'Number of Pokemons',
 				color: '#ff7f0e'
 			}],
 		// your x accessor
@@ -69,12 +73,12 @@ class Popularity extends React.Component {
   		}
   		var chartData = [];
 
-
-
-
   		for (var index in this.state.arr)
   		{
-  			var tuple = {COUNT: this.state.arr[index][1], index: this.state.arr[index][0]}
+  			var tuple = {
+  				COUNT: this.state.arr[index][1], 
+  				index: this.state.arr[index][0]
+  			}
   			chartData.push(tuple)
   		}
     		
@@ -83,23 +87,35 @@ class Popularity extends React.Component {
 		var xLabel = 'POKEMON';
 		var yLabel = "Frequency";
 		var yTicks = [1,""];
-		width = 50*index
-			return (
-				
-      <BarChart
-      	title={title}
-      	width={width}
-      	height={height}
-        data={chartData}
-        chartSeries={chartSeries}
-        x={x}
-        xLabel={xLabel}
-        xScale = {xScale}
-        yTicks = {yTicks}
-        yLabel = {yLabel}
-      />
-				)
-			}
 		
+		return (
+			<div>
+				<FloatingActionButton 
+					style={{ 
+						marginTop: '10px', 
+						marginLeft: '10px',
+						position: 'fixed',
+						top: 0,
+						left: 0
+					}} 
+					onClick={() => {window.location = '/'} }>
+					<NavigationChevronLeft></NavigationChevronLeft>
+				</FloatingActionButton>
+				<h3 style={{textAlign: 'center'}}>Most popular pokemons</h3>
+				<BarChart
+					title={title}
+					width={width}
+					height={height}
+					data={chartData}
+					chartSeries={chartSeries}
+					x={x}
+					xLabel={xLabel}
+					xScale = {xScale}
+					yTicks = {yTicks}
+					yLabel = {yLabel} />
+			</div>
+		)
 	}
+}
+
 export default Popularity;

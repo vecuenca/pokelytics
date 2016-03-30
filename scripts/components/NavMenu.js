@@ -7,6 +7,7 @@ import ListItem from 'material-ui/lib/lists/list-item';
 import AutoComplete from 'material-ui/lib/auto-complete';
 import FlatButton from 'material-ui/lib/flat-button';
 import Dialog from 'material-ui/lib/dialog';
+import Divider from 'material-ui/lib/divider';
 
 // icons
 import AvPlaylistAdd from 'material-ui/lib/svg-icons/av/playlist-add'
@@ -14,6 +15,7 @@ import EditorFormatListNumbered from 'material-ui/lib/svg-icons/editor/format-li
 import SocialGroup from 'material-ui/lib/svg-icons/social/group'
 import MapsPlace from 'material-ui/lib/svg-icons/maps/place'
 import ActionInfo from 'material-ui/lib/svg-icons/action/info';
+import ActionHome from 'material-ui/lib/svg-icons/action/home';
 import ImageFlashOn from 'material-ui/lib/svg-icons/image/flash-on';
 
 import * as Schema from '../constants/Schema'
@@ -126,36 +128,45 @@ class NavMenu extends React.Component {
 						triggerUpdateOnFocus={true} />
 				</div>
 			</Dialog>
+			<List>
+				<ListItem
+					onClick={() => { window.location = '/' }}
+					leftIcon={<ActionHome></ActionHome>}
+					primaryText="Home">
+				</ListItem>
+			</List>
+			<Divider></Divider>
 			<List subheader="Table Schemas">
 				<ListItem
 					primaryText="Pokemon"
 					onTouchTap={this.openTableSchemaDialog.bind(this, Schema.dialogData[0][1], Schema.dialogData[0][0])}
-					rightIcon={<ActionInfo />}/>
+					leftIcon={<ActionInfo />}/>
 				<ListItem
 					primaryText="Trainers"
 					onTouchTap={this.openTableSchemaDialog.bind(this, Schema.dialogData[1][1], Schema.dialogData[1][0])}
-					rightIcon={<ActionInfo />}/>
+					leftIcon={<ActionInfo />}/>
 				<ListItem
 					primaryText="Moves"
 					onTouchTap={this.openTableSchemaDialog.bind(this, Schema.dialogData[2][1], Schema.dialogData[2][0])}
-					rightIcon={<ActionInfo />}/>
+					leftIcon={<ActionInfo />}/>
 				<ListItem
 					primaryText="Locations"
 					onTouchTap={this.openTableSchemaDialog.bind(this, Schema.dialogData[3][1], Schema.dialogData[3][0])}
-					rightIcon={<ActionInfo />}/>
+					leftIcon={<ActionInfo />}/>
 				<ListItem
 					primaryText="Pokemon Moves"
 					onTouchTap={this.openTableSchemaDialog.bind(this, Schema.dialogData[4][1], Schema.dialogData[4][0])}
-					rightIcon={<ActionInfo />}/>
+					leftIcon={<ActionInfo />}/>
 				<ListItem
 					primaryText="Pokemon Locations"
 					onTouchTap={this.openTableSchemaDialog.bind(this, Schema.dialogData[5][1], Schema.dialogData[5][0])}
-					rightIcon={<ActionInfo />}/>
+					leftIcon={<ActionInfo />}/>
 				<ListItem
 					primaryText="Pokemon Trainers"
 					onTouchTap={this.openTableSchemaDialog.bind(this, Schema.dialogData[6][1], Schema.dialogData[6][0])}
-					rightIcon={<ActionInfo />}/>
+					leftIcon={<ActionInfo />}/>
 			</List>
+			<Divider></Divider>
 			<List subheader="Predefined SQL Queries">
 				<ListItem
 					onClick={this.props.displayAndSubmitQuery.bind(this, 'SELECT * from pokemons')}
@@ -173,6 +184,15 @@ class NavMenu extends React.Component {
 					primaryText="Find a Pokemon's moves"
 					onClick={this.openPokemonMovesDialog.bind(this)}
 					leftIcon={<ImageFlashOn></ImageFlashOn>}/>
+			</List>
+			<Divider></Divider>
+			<List subheader="Analytics">
+				<ListItem
+					primaryText="Pokemons grouped by type"
+					onClick={() => { window.location='/graphs' }} />
+				<ListItem
+					primaryText="Most popular pokemons"
+					onClick={() => { window.location='/Popularity' }} />
 			</List>
 		</LeftNav>);
 	}

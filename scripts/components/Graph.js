@@ -1,5 +1,9 @@
 import React from 'react';
 import request from 'superagent';
+
+import FloatingActionButton from 'material-ui/lib/floating-action-button';
+import NavigationChevronLeft from 'material-ui/lib/svg-icons/navigation/chevron-left';
+
 var Chart = require('react-d3-core').Chart;
 var BarChart = require('react-d3-basic').BarChart;
 
@@ -39,7 +43,7 @@ class Graph extends React.Component {
 		}
 	}
 	render() {
-		var width = 1000,
+		var width = 1500,
 		height = 800,
 		margins = {left: 100, right: 100, top: 50, bottom: 50},
 		title = "User sample",
@@ -123,26 +127,37 @@ class Graph extends React.Component {
 		}]
 	  
 		var xScale = "ordinal";
-		var xLabel = 'Letter';
+		var xLabel = 'Pokemon Type';
 		var yLabel = "Frequency";
 		var yTicks = [10,""];
 
-			return (
-				
-      <BarChart
-      	title={title}
-      	width={width}
-      	height={height}
-        data={chartData}
-        chartSeries={chartSeries}
-        x={x}
-        xLabel={xLabel}
-        xScale = {xScale}
-        yTicks = {yTicks}
-        yLabel = {yLabel}
-      />
-				)
-			}
-		
+		return (
+			<div>
+				<FloatingActionButton 
+					style={{ 
+						marginTop: '10px', 
+						marginLeft: '10px',
+						position: 'fixed',
+						top: 0,
+						left: 0
+					}} 
+					onClick={() => {window.location = '/'} }>
+					<NavigationChevronLeft></NavigationChevronLeft>
+				</FloatingActionButton>
+				<h3 style={{textAlign: 'center'}}>Number of pokemons grouped by type</h3>
+				<BarChart
+					title={title}
+					width={width}
+					height={height}
+					data={chartData}
+					chartSeries={chartSeries}
+					x={x}
+					xLabel={xLabel}
+					xScale = {xScale}
+					yTicks = {yTicks}
+					yLabel = {yLabel}
+					/>
+			</div>)
 	}
+}
 export default Graph;
