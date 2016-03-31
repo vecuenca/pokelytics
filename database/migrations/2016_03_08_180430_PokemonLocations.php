@@ -17,6 +17,8 @@ class PokemonLocations extends Migration
             $table->foreign('pokemon')->references('id')->on('pokemons');
             $table->integer('location')->unsigned();
             $table->foreign('location')->references('id')->on('locations');
+
+            $table->primary(['pokemon', 'location']);
         });
     }
 
