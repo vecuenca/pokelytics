@@ -74,7 +74,7 @@ class NavMenu extends React.Component {
 
 			for (var i in json)
 				pokemonList.push(json[i].name);
-			
+
 			// work with locationList
 			var json2 = JSON.parse(res2);
 			json2.shift();
@@ -114,7 +114,7 @@ class NavMenu extends React.Component {
 	}
 
 	handlePokemonMovesDialogSubmit(val) {
-		var query = 
+		var query =
 		"SELECT m.*, pm.learned_at \r\n\
 FROM pokemons p, pokemon_moves pm, moves m \r\n\
 WHERE pokemon = p.id and move = m.id and p.name='" + val + "'";
@@ -122,22 +122,22 @@ WHERE pokemon = p.id and move = m.id and p.name='" + val + "'";
 	};
 
 	handlePokemonAvailableDialogSubmit(val) {
-		var query =	
-		"select p.id as 'id', p.name as 'Pokemon', p.catch_rate as 'Catch Rate' \r\n\
-from \r\n\
+		var query =
+		"SELECT p.id AS 'id', p.name AS 'Pokemon', p.catch_rate AS 'Catch Rate' \r\n\
+FROM \r\n\
 pokemon_locations pl \r\n\
-join locations l on pl.location = l.id \r\n\
-join pokemons p on p.id = pl.pokemon \r\n\
-where l.name = '" + val + "'"
+JOIN locations l ON pl.location = l.id \r\n\
+JOIN pokemons p ON p.id = pl.pokemon \r\n\
+WHERE l.name = '" + val + "'"
 		this.props.displayAndSubmitQuery(query);
 	};
 
 	handlePokemonLocationDialogSubmit(val) {
-		var query = 	"select l.name as 'Location' \r\n\
+		var query = 	"SELECT l.name AS 'Location' \r\n\
 FROM \r\n\
 pokemon_locations pl \r\n\
-JOIN locations l on pl.location = l.id \r\n\
-JOIN pokemons p on p.id = pl.pokemon \r\n\
+JOIN locations l ON pl.location = l.id \r\n\
+JOIN pokemons p ON p.id = pl.pokemon \r\n\
 WHERE p.name = '" + val + "'";
 		this.props.displayAndSubmitQuery(query);
 	};
@@ -149,7 +149,7 @@ WHERE p.name = '" + val + "'";
 			var json = JSON.parse(res);
 			json.shift();
 			id = json[0].id;
-			var query = "select pt.name, m1.name AS move1, m2.name AS move2, m3.name AS move3, m4.name AS move4 \r\n\
+			var query = "SELECT pt.name, m1.name AS move1, m2.name AS move2, m3.name AS move3, m4.name AS move4 \r\n\
 FROM homestead.pokemon_trainers pt \r\n\
 JOIN homestead.moves m1 ON pt.move1 = m1.id AND pt.trainer ='" + id +"'\r\n\
 JOIN homestead.moves m2 ON pt.move2 = m2.id AND pt.trainer ='" + id +"'\r\n\
@@ -174,11 +174,11 @@ JOIN homestead.moves m4 ON pt.move4 = m4.id AND pt.trainer ='" + id +"'";
 			autocompleteDataSource: dataSource,
 			autocompleteHintText: hintText,
 			anchorEl: event.currentTarget,
-			autocompleteSubmitHandler: (val) => { 
-				submitHandler(val); 
+			autocompleteSubmitHandler: (val) => {
+				submitHandler(val);
 				this.setState({
 					openPopover: false
-				}) 
+				})
 			}
 		})
 	}
